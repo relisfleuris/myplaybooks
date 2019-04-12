@@ -15,4 +15,7 @@
      path: /tmp/zabbix-agent_{{zabbix_version}}+{{debian_version}}_amd64.deb
  
 - name: Configure Zabbix
-  template: src=zabbix_agentd.j2 dest=/etc/zabbix/zabbix_agentd.conf
+  template: 
+        src: zabbix_agentd.j2 
+        dest: /etc/zabbix/zabbix_agentd.conf
+
