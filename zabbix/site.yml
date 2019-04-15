@@ -1,8 +1,8 @@
 ---
-- name: Install Zabbix Agent
+- name: configure Zabbix Agent and add on Zabbix Server
   hosts: linux
   become: yes
   become_method: sudo
-
+ 
   roles:
        - zabbix-linux
