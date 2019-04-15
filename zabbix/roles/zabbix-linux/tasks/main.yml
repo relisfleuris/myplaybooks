@@ -20,3 +20,26 @@
         dest: /etc/zabbix/zabbix_agentd.conf
   notify:
         - restart zabbix-agent
+
+- name: Install requirements 1
+  apt:
+        name: python-pip
+        
+- name: Install requirements 2
+  pip:
+        name: zabbix-api
+
+- name: Add on Zabbix Server
+  zabbix_host:
+        server_url: "http://{{zabbix_server_address}}/zabbix"
+        login_user:  "{{zabbix_server_user}}"
+        login_password: "{{zabbix_server_pass}}"
+        host_name: "{{ansible_facts['nodename']}}"
+        host_groups: "{{zabbix_host_groups}}"
+        link_templates: "{{zabbix_agent_templates}}"
+        interfaces:
+                - type: 1
+                  main: 1
+                  useip: 1
+                  ip: "{{ansible_facts.default_ipv4.address}}"
+        state: present

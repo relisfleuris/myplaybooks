@@ -1,3 +1,8 @@
 ---
 
 zabbix_server_address: 10.192.9.31
+zabbix_server_user: Admin
+zabbix_server_pass: zabbix
+zabbix_host_groups: Linux servers
+zabbix_agent_port: 10050
+zabbix_agent_templates: Template OS Linux
