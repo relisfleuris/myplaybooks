@@ -26,14 +26,6 @@
   notify:
         - restart zabbix-agent
 
-- name: Install requirements 1
-  apt:
-        name: python-pip
-        
-- name: Install requirements 2
-  pip:
-        name: zabbix-api
-
 - name: Add on Zabbix Server
   zabbix_host:
         server_url: "http://{{zabbix_server_address}}/zabbix"
@@ -48,3 +40,5 @@
                   useip: 1
                   ip: "{{ansible_facts.default_ipv4.address}}"
         state: present
+  delegate_to: localhost
+  become: no
