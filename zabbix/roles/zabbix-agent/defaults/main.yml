@@ -6,3 +6,5 @@ zabbix_server_pass: zabbix
 zabbix_host_groups: Linux servers
 zabbix_agent_port: 10050
 zabbix_agent_templates: Template OS Linux
+
+zabbix_agent_os_family: "{{ansible_os_family}}"
