@@ -18,3 +18,10 @@
   file:
      state: absent
      path: /tmp/zabbix-agent_{{zabbix_version}}+{{debian_version}}_amd64.deb
+
+- name: configure Zabbix Agent
+  template: 
+        src: zabbix_agentd.j2
+        dest: /etc/zabbix/zabbix_agentd.conf
+  notify:
+        - restart zabbix-agent

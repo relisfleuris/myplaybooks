@@ -1,0 +1,6 @@
+---
+- name: Copy Zabbix Agent
+  win_copy:
+     src: zabbix_agents-4.2.1-win-amd64.zip
+     dest: C:\
+

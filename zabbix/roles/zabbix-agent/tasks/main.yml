@@ -4,13 +4,25 @@
   include: "Debian.yml"
   when:
         - zabbix_agent_os_family == "Debian"
-          
-- name: Configure Zabbix
-  template: 
-        src: zabbix_agentd.j2 
-        dest: /etc/zabbix/zabbix_agentd.conf
-  notify:
-        - restart zabbix-agent
+
+- name: Install the correct OS repository
+  include: "Windows.yml"
+  when:
+        - zabbix_agent_os_family == "Windows"
+ 
+- name: "set default zabbix_agent_ip"
+  set_fact:
+          zabbix_agent_ip: "{{hostvars[inventory_hostname]['ansible_default_ipv4'].address}}"
+  when:
+        - zabbix_agent_ip is not defined
+        - "'ansible_default_ipv4' in hostvars[inventory_hostname]"
+
+- name: "set default zabbix_agent_ip for windows"
+  set_fact:
+          zabbix_agent_ip: "{{hostvars[inventory_hostname]['ansible_ip_addresses'] | first}}"
+  when:
+       - zabbix_agent_ip is not defined
+       - "'ansible_ip_addresses' in hostvars[inventory_hostname]"
 
 - name: Add on Zabbix Server
   zabbix_host:
@@ -19,12 +31,12 @@
         login_password: "{{zabbix_server_pass}}"
         host_name: "{{ansible_facts['nodename']}}"
         host_groups: "{{zabbix_host_groups}}"
-        link_templates: "{{zabbix_agent_templates}}"
+        link_templates: "{{zabbix_link_templates}}"
         interfaces:
                 - type: 1
                   main: 1
                   useip: 1
-                  ip: "{{ansible_facts.default_ipv4.address}}"
+                  ip: "{{zabbix_agent_ip}}"
         state: present
   delegate_to: localhost
   become: no
