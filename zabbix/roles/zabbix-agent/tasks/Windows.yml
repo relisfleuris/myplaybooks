@@ -22,6 +22,8 @@
      dest: '{{zabbix_win_install_dir}}'
   when:
       - not package_file_info.stat.exists
-
-
-
+ 
+- name: "unzip zabbix agent package"
+  win_unzip:
+      src: '{{zabbix_win_install_dir}}\{{zabbix_win_package}}'
+      dest: '{{zabbix_win_install_dir}}\zabbix'
