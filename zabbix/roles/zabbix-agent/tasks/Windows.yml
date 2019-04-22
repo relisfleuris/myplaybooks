@@ -1,6 +1,12 @@
 ---
+
+- name: "set vatiables for windows environment"
+  set_fact:
+          zabbix_win_package: zabbix_agents-4.2.1-win-amd64.zip
+          zabbix_win_exe_path: '{{zabbix_win_install_dir}}\bin\zabbix_agentd.exe'
+
 - name: Copy Zabbix Agent
   win_copy:
-     src: zabbix_agents-4.2.1-win-amd64.zip
+     src: '{{zabbix_win_package}}'
      dest: C:\
 
