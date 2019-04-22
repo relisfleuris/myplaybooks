@@ -4,7 +4,7 @@
   set_fact:
           zabbix_win_package: zabbix_agents-4.2.1-win-amd64.zip
           zabbix_win_exe_path: '{{zabbix_win_install_dir}}\bin\zabbix_agentd.exe'
-          zabbix_win_install_dir: 'C:\zabbix_agents-4.2.1-win-amd64.zip'
+          zabbix_win_install_dir: 'C:\'
 
 - name: "Check zabbix agent stats"
   win_stat:
@@ -13,13 +13,13 @@
 
 - name: "check zabbix package stats"
   win_stat:
-     path: '{{zabbix_win_install_dir}}'
+     path: '{{zabbix_win_install_dir}}\{{zabbix_win_package}}'
   register: package_file_info
 
 - name: Copy Zabbix Agent
   win_copy:
      src: '{{zabbix_win_package}}'
-     dest: C:\
+     dest: '{{zabbix_win_install_dir}}'
   when:
       - not package_file_info.stat.exists
 
