@@ -4,7 +4,8 @@
   set_fact:
           zabbix_win_package: zabbix_agents-4.2.1-win-amd64.zip
           zabbix_win_exe_path: '{{zabbix_win_install_dir}}\bin\zabbix_agentd.exe'
-          zabbix_win_install_dir: 'C:\'
+          zabbix_win_install_dir: 'C:'
+          zabbix_server_win_address: '172.16.192.31'
 
 - name: "Check zabbix agent stats"
   win_stat:
@@ -22,8 +23,37 @@
      dest: '{{zabbix_win_install_dir}}'
   when:
       - not package_file_info.stat.exists
- 
+
+- name: "check if is already installed"
+  win_stat:
+     path: "{{zabbix_win_exe_path}}"
+  register: zabbix_agent_exe_info
+
 - name: "unzip zabbix agent package"
   win_unzip:
       src: '{{zabbix_win_install_dir}}\{{zabbix_win_package}}'
       dest: '{{zabbix_win_install_dir}}\zabbix'
+  when: not zabbix_agent_exe_info.stat.exists
+
+- name: "config zabbix agent service"
+  win_template:
+      src: zabbix_agentd.win.j2
+      dest: '{{zabbix_win_install_dir}}\zabbix\conf\zabbix_agentd.win.conf'
+  notify:
+      - restart windows zabbix-agent
+ 
+- name: "check if service is installed"
+  win_service:
+      name: Zabbix Agent
+  register: service_info
+
+- name: "install zabbix service"
+  win_command: '{{zabbix_win_exe_path}} -c {{zabbix_win_install_dir}}\zabbix\conf\zabbix_agentd.win.conf --install'
+  register: zabbix_windows_install
+  when: not service_info.exists
+
+- name: "start Zabbix Agent service"
+  win_service:
+      name: Zabbix Agent
+      start_mode: auto
+      state: started

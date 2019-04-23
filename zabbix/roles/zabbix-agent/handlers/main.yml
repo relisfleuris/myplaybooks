@@ -4,3 +4,8 @@
   service:
       name: zabbix-agent
       state: restarted
+
+- name: restart windows zabbix-agent
+  win_service:
+      name: Zabbix Agent
+      state: restarted
